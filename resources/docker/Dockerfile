@@ -114,9 +114,11 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
 # Copy LLVM install (runtime tools) AND source+build trees (for backend dev)
-COPY --from=llvm-base /opt/llvm     /opt/llvm
-COPY --from=llvm-base /llvm-src     /llvm-src
-COPY --from=llvm-base /llvm-build   /llvm-build
+# Assign ownership up front so the later dev user can use them without a
+# slow recursive chown over the entire LLVM tree.
+COPY --from=llvm-base --chown=1000:1000 /opt/llvm     /opt/llvm
+COPY --from=llvm-base --chown=1000:1000 /llvm-src     /llvm-src
+COPY --from=llvm-base --chown=1000:1000 /llvm-build   /llvm-build
 
 # ---------------------------------------------------------------------------
 # System packages
@@ -231,8 +233,7 @@ ENV PATH="/opt/llvm/bin:/opt/quartus/quartus/bin:${PATH}" \
 # Non-root dev user (uid 1000 matches the VS Code Dev Container config)
 # ---------------------------------------------------------------------------
 RUN useradd -m -s /bin/bash -u 1000 dev \
-    && echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && chown -R dev:dev /llvm-src /llvm-build /opt/llvm
+    && echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 WORKDIR /workspace
 USER dev
