@@ -1,0 +1,46 @@
+# my_cpu.simulate.yml
+# Simulate a compiled program in Icarus Verilog and verify register values.
+#
+# Usage (compile first, then simulate):
+#   python3 ../scripts/compile.py  my_cpu.compile.yml
+#   python3 ../scripts/simulate.py my_cpu.simulate.yml
+#
+# Paths are resolved relative to THIS file.
+
+simulate:
+  output-dir: ./build/sim
+
+  # Standalone hex produced by compile.py (includes the _start stub).
+  # The startup stub is baked in by compile.py — no startup: section needed.
+  program: ./build/compile/program.hex
+
+  rtl:
+    base-dir: ./rtl          # base directory for the files listed below
+    files:                   # TODO: list your own RTL files, packages first
+      - my_pkg.v
+      - my_alu.v
+      - my_decoder.v
+      - my_regfile.v
+      - my_imem.v
+      - my_dmem.v
+      - my_cpu.v
+      - my_tb.v
+                             # The testbench must follow two conventions so
+                             # simulate.py can drive and inspect it:
+                             #   1. Accept +PROGRAM=<hex> and +MAX_CYCLES=<N>
+                             #      as runtime plusargs.
+                             #   2. Print register values in the format:
+                             #        rN = 0x<hex>
+                             #      so the verify: block below can match them.
+
+  # Expected register values after the simulation halts.
+  # TODO: set these to match your test program's result.
+  verify:
+    - register: r8
+      value: 42
+
+  options:
+    max-cycles: 100000       # safety limit (halt if the CPU never reaches HALT)
+    trace: false             # set true for a waveform dump (TRACE ifdef in RTL)
+
+  assembler: ""              # path to your assembler (auto-detects tools/asm.py)

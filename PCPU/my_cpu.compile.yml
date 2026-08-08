@@ -1,0 +1,41 @@
+# my_cpu.compile.yml
+# Compile C / assembly sources into your ISA's assembly and hex image.
+#
+# Usage:
+#   python3 ../scripts/compile.py my_cpu.compile.yml
+#
+# Paths are resolved relative to THIS file.
+
+compile:
+  output-dir: ./build/compile
+
+  compiler:
+    install-dir: /llvm-build  # use the locally rebuilt LLVM with your target
+    target: myisa             # your backend's -march name (lower-case)
+    misc:                     # extra clang flags (IR generation stage)
+      - -O1
+    codegen:                  # extra llc flags (code-generation stage)
+      - -O0
+    add-path:                 # additional C include search paths
+      - ./include
+
+  output:
+    asm:  true                # always emit a combined .asm file
+    hex:  true                # also assemble the .asm to a .hex memory image
+    name: program             # stem of the output filenames
+    assembler: ""             # path to your assembler (auto-detects tools/asm.py)
+
+  # Startup stub: prepended to the compiled output so the hex is standalone.
+  # _start initialises SP, loads any arguments into the argument registers,
+  # calls the entry function, then executes HALT.
+  startup:
+    entry: main               # C function to call
+    args: []                  # no arguments (main takes void)
+
+  # Source groups. C files are compiled to LLVM IR, linked with llvm-link,
+  # then lowered to your assembly via llc. ASM files are appended afterwards.
+  # TODO: point these at your own test sources.
+  groups:
+    - group: Tests
+      files:
+        - file: ./tests/test_sim.c

@@ -1,0 +1,22 @@
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+[Full text: https://www.apache.org/licenses/LICENSE-2.0]
+
+SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+LLVM Exception:
+As an exception, if, as a result of your compiling your source code, portions
+of this Software are embedded into an Object form of such source code, you
+may redistribute such embedded portions in such Object form without complying
+with the conditions of Sections 4 and 5 of the Apache 2.0 License, provided
+that you reproduce the above copyright notice in the Object form and/or other
+documentation, and you do not use the name of the licensor or contributors to
+endorse or promote products derived from this Software without specific prior
+written permission.
+
+Full license text: https://llvm.org/LICENSE.txt
+SPDX exception text: https://spdx.org/licenses/LLVM-exception.html

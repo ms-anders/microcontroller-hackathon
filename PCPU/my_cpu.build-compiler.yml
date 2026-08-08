@@ -1,0 +1,75 @@
+# my_cpu.build-compiler.yml
+# Build your LLVM backend into the pre-built LLVM 17 tree.
+#
+# Usage:
+#   python3 ../scripts/build_compiler.py my_cpu.build-compiler.yml
+#
+# Paths are resolved relative to THIS file. Out of the box it targets the
+# MYISA skeleton in ./llvm-backend/. Rename MYISA throughout once you rename
+# the backend for your own ISA (see llvm-backend and the template README).
+
+build-compiler:
+  # LLVM tree locations. Default to $LLVM_SRC / $LLVM_BUILD / $LLVM_INSTALL
+  # (pre-set in the dev container), so these can usually be left blank.
+  llvm:
+    src-dir:     ""          # default: $LLVM_SRC     or /llvm-src
+    build-dir:   ""          # default: $LLVM_BUILD   or /llvm-build
+    install-dir: ""          # default: $LLVM_INSTALL or /opt/llvm
+    jobs:        0           # 0 = use all CPU cores
+    verify:      true        # confirm target appears in 'llc --version'
+
+  target:
+    backend-dir: ./llvm-backend   # path to the backend source tree
+    name:        MYISA            # must be a valid C identifier (no hyphens)
+
+  # ---------------------------------------------------------------------------
+  # cmake — drives CMakeLists.txt generation.
+  #
+  # build_compiler.py uses this section to write (or overwrite) the backend's
+  # CMakeLists.txt before copying it into the LLVM source tree. Edit here
+  # instead of editing CMakeLists.txt directly. If you rename the target,
+  # rename every MYISA* entry below to match your file names.
+  # ---------------------------------------------------------------------------
+  cmake:
+    # Root TableGen input file; all tablegen() calls below read from it.
+    tablegen-root: MYISA.td
+
+    # Each entry produces one .inc file via llvm-tblgen.
+    # output: generated filename   flag: tablegen -gen-* flag
+    tablegen:
+      - { output: MYISAGenRegisterInfo.inc,  flag: -gen-register-info }
+      - { output: MYISAGenInstrInfo.inc,     flag: -gen-instr-info    }
+      - { output: MYISAGenDAGISel.inc,       flag: -gen-dag-isel      }
+      - { output: MYISAGenCallingConv.inc,   flag: -gen-callingconv   }
+      - { output: MYISAGenSubtargetInfo.inc, flag: -gen-subtarget     }
+      - { output: MYISAGenAsmWriter.inc,     flag: -gen-asm-writer    }
+
+    # .cpp files compiled into the LLVMMYISACodeGen library.
+    sources:
+      - MYISAAsmPrinter.cpp
+      - MYISAFrameLowering.cpp
+      - MYISAInstrInfo.cpp
+      - MYISAISelDAGToDAG.cpp
+      - MYISAISelLowering.cpp
+      - MYISARegisterInfo.cpp
+      - MYISASubtarget.cpp
+      - MYISATargetMachine.cpp
+
+    # LLVM component libraries to link against.
+    # The last two are the sub-libraries defined in the subdirectories below.
+    link-components:
+      - AsmPrinter
+      - CodeGen
+      - CodeGenTypes
+      - Core
+      - MC
+      - SelectionDAG
+      - Support
+      - Target
+      - MYISADesc
+      - MYISAInfo
+
+    # Sub-libraries built from subdirectories.
+    subdirectories:
+      - MCTargetDesc
+      - TargetInfo

@@ -1,0 +1,37 @@
+# my_cpu.synthesize.yml
+# Synthesise your CPU core for an FPGA using Quartus Prime.
+#
+# Usage:
+#   python3 ../scripts/synthesize.py my_cpu.synthesize.yml
+#
+# If Quartus Prime is not installed the script generates the TCL project file
+# and prints the manual run command. Paths are resolved relative to THIS file.
+
+synthesize:
+  output-dir: ./build/quartus
+
+  # Target FPGA part number (this example is the DE1-SoC's Intel Cyclone V).
+  device: 5CSEMA5F31C6
+
+  # Top-level module to synthesise.
+  top: my_cpu
+
+  rtl:
+    base-dir: ./rtl          # base directory for the files listed below
+    files:                   # TODO: list your own RTL files, packages first
+      - my_pkg.v
+      - my_alu.v
+      - my_decoder.v
+      - my_regfile.v
+      - my_imem.v
+      - my_dmem.v
+      - my_cpu.v
+    include-testbench: false # exclude *_tb.v / *_testbench.v files
+
+    # Additional individual files to include (e.g. IP cores, constraint files).
+    # extra-files:
+    #   - ./constraints/de1_soc.sdc
+
+  quartus:
+    bin: ""                  # Quartus bin directory; auto-detected from
+                             # $QUARTUS_ROOTDIR/bin or PATH if left empty
