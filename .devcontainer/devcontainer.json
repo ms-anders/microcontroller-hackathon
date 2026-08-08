@@ -49,7 +49,7 @@
                 // Use Verilator for RTL linting (installed in the container)
                 "verilog.linting.linter": "verilator",
                 "verilog.linting.verilator.runAtFileLocation": true,
-                "verilog.linting.verilator.arguments": "--lint-only -Wall"
+                "verilog.linting.verilator.arguments": "--lint-only -Wall -I${workspaceFolder}/PCPU/rtl/include"
             }
         }
     },

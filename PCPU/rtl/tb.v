@@ -1,7 +1,7 @@
-`include "config.vh"
+`include "include/config.vh"
 `timescale 1ns/1ps
 
-module test_harness;
+module tb;
 reg clk = 0;
 reg ist_n = 0;
 
