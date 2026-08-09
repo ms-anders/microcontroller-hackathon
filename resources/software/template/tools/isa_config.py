@@ -38,7 +38,7 @@ REG_ALIASES = {
     "arg5": 25,
     "arg6": 26,
     "ret": 27,
-    "acc": 19
+    "acc": 0
 }
 
 # ---------------------------------------------------------------------------
@@ -47,23 +47,32 @@ REG_ALIASES = {
 
 # Type 1 opcodes (example: 14-bit opcode, MSB of the word is always 1)
 T1_OPS = {
-    "ADD": 0x0000,
-    "SUB": 0x0001,
-    "OR": 0x0002,
-    "LOR": 0x0003,
-    "AND": 0x0004,
-    "LAND": 0x0005,
-    "XOR": 0x0006,
-    "NOT": 0x0007,
-    "NEG": 0x0008,
-    "ABS": 0x0009,
-    "SHL": 0x000A,
-    "SHR": 0x000B,
-    "SAR": 0x000C,
-    "CMP": 0x000D,
-    "MUL": 0x000E,
-    "MOV": 0x000F,
-    "LUI": 0x0010,
+    "ADD": 0b100000
+    "SUB": 0b100001
+    "NEG": 0b100010
+    "AND": 0b100100
+    "OR": 0b100101
+    "XOR": 0b100110
+    "NOT": 0b100111
+    "LSL": 0b101000
+    "LSR": 0b101001
+    "ASR": 0b101011
+    "CMP": 0b101100
+    "MOV": 0b000000
+    "LI2": 0b000001
+    "LD": 0b010000
+    "STO": 0b010001
+    "LDB": 0b010100
+    "STB": 0b010101
+    "POP": 0b010010
+    "PUSH": 0b010011
+    "JMP": 0b001000
+    "JEQ": 0b001010
+    "JNE": 0b001011
+    "JL": 0b001100
+    "JG": 0b001101
+    "JSR": 0b011000
+    "RET": 0b011001
 }
 
 # Type 1 ops that only use arg1 (no arg2)
@@ -71,20 +80,6 @@ T1_UNARY = {"NOT", "NEG", "ABS", "MOV", "LUI"}
 
 # Type 2 opcodes (example: 9-bit opcode, MSB of the word is always 0)
 T2_OPS = {
-    "LOAD": 0x000,
-    "STORE": 0x001,
-    "LOADB": 0x002,
-    "STOREB": 0x003,
-    "JMP": 0x004,
-    "JZ": 0x005,
-    "JNZ": 0x006,
-    "JLT": 0x007,
-    "JGT": 0x008,
-    "CALL": 0x009,
-    "RET": 0x00A,
-    "PUSH": 0x00B,
-    "POP": 0x00C,
-    "LI": 0x00D,
 }
 
 # Control-flow instructions that use branch/call target handling
