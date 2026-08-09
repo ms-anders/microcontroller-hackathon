@@ -14,7 +14,7 @@ module alu (
     output logic is_equal = 1'b0
 );
 
-    always @(*) begin
+    always_comb begin
         result = `DATA_WIDTH'b0; // default to previous value
         is_greater = 1'b0; // default to previous value
         is_less = 1'b0; // default to previous value
