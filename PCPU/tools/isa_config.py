@@ -165,3 +165,4 @@ def encode_type2(opcode, ri, reg, addr):
             "addr": addr,
         },
     )
+

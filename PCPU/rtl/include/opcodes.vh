@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 `ifndef OPCODES_VH
 `define OPCODES_VH
 
@@ -41,5 +42,16 @@
 
 `define OP_JSR 011000
 `define OP_RET 011001 
+=======
+// rtl/include/opcodes.vh
+`ifndef OPCODES_VH
+`define OPCODES_VH
+
+// Fill in YOUR opcode values from your ISA spec
+`define OP_ADD  6'b000000
+`define OP_SUB  6'b000001
+`define OP_MOV  6'b000010
+`define OP_LI   6'b000011
+>>>>>>> 22760ec (12345678#)
 
 `endif
