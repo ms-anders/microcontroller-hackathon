@@ -10,7 +10,7 @@ module alu (
     output logic is_less,
     output logic is_equal
 );
-    always @(*) begin
+    always_comb begin
         case (op)
             `OP_ADD: result = a + b;
             `OP_SUB: result = a - b;
