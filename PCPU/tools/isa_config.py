@@ -76,7 +76,7 @@ T1_OPS = {
 }
 
 # Type 1 ops that only use arg1 (no arg2)
-T1_UNARY = {"NOT", "NEG", "ABS", "MOV", "LUI"}
+T1_UNARY = {"NOT", "NEG"}
 
 # Type 2 opcodes (example: 9-bit opcode, MSB of the word is always 0)
 T2_OPS = {

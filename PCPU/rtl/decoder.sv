@@ -1,17 +1,4 @@
 `include "include/config.vh"
-
-module decoder (
-    input logic [`INSTR_WIDTH-1:0] instr,
-    output logic [`REG_ADDR_W-1:0] r1_addr,
-    output logic [`REG_ADDR_W-1:0] r2_addr,
-    output logic [`REG_ADDR_W-1:0] rd_addr,
-    output logic                   is_alu_op,
-    output logic                   is_data_wr_op
-);
-
-
-// rtl/decoder.v
-`include "include/config.vh"
 `include "include/opcodes.vh"
 
 module decoder (
@@ -20,6 +7,8 @@ module decoder (
     // Outputs: one per field in your encoding
     // These names and widths should match YOUR ISA spec
     output logic                    is_alu_op,   // is this an arithmetic/logic instruction?
+    output logic                    is_branch,   // is this a branch instruction?
+    output logic                    is_mem_op,   // is this a memory instruction?
     output logic [5:0]              opcode,      // which operation?
     output logic [2:0]              rd,          // destination register
     output logic [4:0]              rs1,         // source register 1
@@ -29,18 +18,24 @@ module decoder (
     output logic                    reg_write_en // should we write back a result?
     // Add more outputs as your design requires
 );
+    assign opcode = instr[31:26];
 
-    // Extract fields from the instruction word.
-    // The bit ranges must match the layout you documented in your ISA spec.
-    assign opcode    = instr[15:10];
-    assign rd         = instr[9:7];
-    assign rs1        = instr[6:4];
-    assign rs2         = instr[3:1];
-    assign immediate  = instr[7:0];
-    // ... fill in the rest ...
+    always_comb begin
+        if (opcode[5]) begin
+            is_alu_op = opcode[5];
+            is_imm_op = instr[25];
+            is_branch = 1'b0;
+            is_mem_op = 1'b0;
+        end else begin
+            is_alu_op = 1'b0;
+            {is_mem_op, is_branch} = opcode[4:3];
+        end
 
-    // Control signals derived from the opcode
-    assign is_alu_op    = (opcode[1] == 1'b1); /* true when opcode is an arithmetic/logic op */;
-    assign reg_write_en = (instr[15:10] == `OP_ADD || instr[15:10] == `OP_SUB || instr[15:10] == `OP_MOV); /* true for instructions that write to a register */;
+        if (is_alu_op) begin
+            rd = instr[24:20];
+            rs1 = instr[19:15];
+            rs2 = instr[14:10];
+        end
+    end
 
 endmodule

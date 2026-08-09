@@ -4,6 +4,8 @@
 `define DATA_WIDTH 64
 `define DATA_ADDR_W 16
 
+`define OPCODE_W 6
+
 `define INSTR_WIDTH 32
 `define INSTR_ADDR_W 12
 `define REG_COUNT 32
